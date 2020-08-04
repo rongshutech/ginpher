@@ -1,0 +1,25 @@
+{
+  "Server": {
+    "AppMode": "debug",
+    "AppReadTimeout":30
+  },
+  "Db": {
+    "Host": "localhost"
+  },
+  "AlarmConfig": {
+    "EnablePanicAlarm": true,
+    "WxAlarmConfig":{
+      "Enable": true,
+      "CorpID": "",
+      "AgentID": "",
+      "Secret": "",
+      "EncodingAESKey": ""
+    },
+    "AlarmMessage": {
+      "Level":"",
+      "Type": "",
+      "Endpoint": "",
+      "Desc": ""
+    }
+  }
+}
