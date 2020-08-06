@@ -12,13 +12,15 @@ import (
 	"fmt"
 	"ginpher/app/config"
 	"ginpher/app/middleware/error_handler"
-	"github.com/gin-contrib/pprof"
-	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
+	"ginpher/app/router"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/gin-contrib/pprof"
+	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -31,9 +33,10 @@ func main() {
 
 	//panic 处理
 	error_handler.Register(engine)
+	router.Register(engine)
 
 	// 性能分析 - 正式环境不要使用！！！
-	if config.ServerConfig.AppMode != "release" {
+	if config.ServerConfig.AppMode != "rselease" {
 		pprof.Register(engine)
 	}
 

@@ -8,18 +8,19 @@
 package error_handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-type ErrorResponse struct{
+type ErrorResponse struct {
 	StatusCode int    `json:"-"`
 	Code       int    `json:"code"`
 	Msg        string `json:"msg"`
 }
 
-func NewErrorResponse(statusCode,code int, msg string)*ErrorResponse{
-	return &ErrorResponse{StatusCode:statusCode,Code:code,Msg:msg}
+func NewErrorResponse(statusCode, code int, msg string) *ErrorResponse {
+	return &ErrorResponse{StatusCode: statusCode, Code: code, Msg: msg}
 }
 
 var (
@@ -32,32 +33,31 @@ func OtherError(message string) *ErrorResponse {
 	return NewErrorResponse(http.StatusForbidden, 100403, message)
 }
 
-
 func (e *ErrorResponse) Error() string {
 	return e.Msg
 }
 
 func HandleNotFound(c *gin.Context) {
 	err := NotFound
-	c.JSON(err.StatusCode,err)
+	c.JSON(err.StatusCode, err)
 	return
 }
 
-func ErrHandler() gin.HandlerFunc  {
+func ErrHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
 				var Err *ErrorResponse
-				if e,ok := err.(*ErrorResponse); ok {
+				if e, ok := err.(*ErrorResponse); ok {
 					Err = e
-				}else if e, ok := err.(error); ok {
+				} else if e, ok := err.(error); ok {
 					Err = OtherError(e.Error())
-				}else{
+				} else {
 					Err = ServerError
 				}
 				// 记录一个错误的日志
 				// TODO:  send alarm
-				c.JSON(Err.StatusCode,Err)
+				c.JSON(Err.StatusCode, Err)
 				return
 			}
 		}()
@@ -65,7 +65,7 @@ func ErrHandler() gin.HandlerFunc  {
 	}
 }
 
-func Register(engine *gin.Engine){
+func Register(engine *gin.Engine) {
 	engine.NoRoute(HandleNotFound)
 	engine.NoMethod(HandleNotFound)
 	engine.Use(ErrHandler())
